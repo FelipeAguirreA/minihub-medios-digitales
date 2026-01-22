@@ -2,7 +2,12 @@
 
 Proyecto fullstack tipo “agencia / integraciones” para gestionar **proyectos** y **leads**, con una landing pública y un dashboard privado.
 
-El objetivo del proyecto es aprender y demostrar el uso del stack **MERN**, flujos de autenticación, consumo de API y comunicación frontend–backend.
+El objetivo del proyecto es aprender y demostrar el uso del stack **MERN** (MongoDB (base de datos NoSQL), Express.js (framework de backend), React (biblioteca de frontend) y Node.js (entorno de ejecución del servidor)), flujos de autenticación, consumo de API y comunicación frontend–backend.
+
+## 📄 Documentación
+
+- [Ver README](README.md)
+- [Ver Explicación del Proyecto](EXPLICACION_DEL_PROYECTO.md)
 
 ---
 
