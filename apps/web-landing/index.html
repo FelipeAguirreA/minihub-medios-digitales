@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MiniHub - Landing</title>
+  <style>
+    body { font-family: system-ui; max-width: 900px; margin: 0 auto; padding: 24px; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 16px; }
+    label { display:block; margin-top: 10px; font-size: 14px; }
+    input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+    button { margin-top: 12px; padding: 10px 14px; border-radius: 8px; border: 0; cursor: pointer; }
+    .ok { color: #0a7a2f; }
+    .err { color: #c1121f; }
+    code { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>MiniHub (Landing)</h1>
+  <p>Esta landing envía leads al backend. Necesitas un <b>projectId</b> creado desde el dashboard.</p>
+
+  <div class="card">
+    <h3>Formulario contacto</h3>
+
+    <label>ProjectId</label>
+    <input id="projectId" placeholder="Pega aquí el ProjectId del dashboard" />
+
+    <label>Nombre</label>
+    <input id="name" placeholder="Tu nombre" />
+
+    <label>Email</label>
+    <input id="email" placeholder="tu@email.com" />
+
+    <label>Teléfono</label>
+    <input id="phone" placeholder="+56..." />
+
+    <label>Mensaje</label>
+    <textarea id="message" rows="4" placeholder="Cuéntanos qué necesitas..."></textarea>
+
+    <button id="btn">Enviar</button>
+    <p id="msg"></p>
+
+    <p style="margin-top:14px;color:#666;">
+      Backend: <code>http://localhost:4000/api/leads</code>
+    </p>
+  </div>
+
+  <script>
+    const API = "http://localhost:4000/api/leads";
+    const $ = (id) => document.getElementById(id);
+
+    $("btn").addEventListener("click", async () => {
+      $("msg").className = "";
+      $("msg").textContent = "";
+
+      const payload = {
+        projectId: $("projectId").value.trim(),
+        name: $("name").value.trim(),
+        email: $("email").value.trim(),
+        phone: $("phone").value.trim(),
+        message: $("message").value.trim(),
+        source: "landing"
+      };
+
+      // validaciones básicas
+      if (!payload.projectId || payload.projectId.length < 10) {
+        $("msg").className = "err";
+        $("msg").textContent = "Falta projectId (cópialo del dashboard).";
+        return;
+      }
+      if (payload.name.length < 2) {
+        $("msg").className = "err";
+        $("msg").textContent = "Nombre muy corto.";
+        return;
+      }
+      if (!payload.email.includes("@")) {
+        $("msg").className = "err";
+        $("msg").textContent = "Email inválido.";
+        return;
+      }
+
+      try {
+        const res = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.message || "Error enviando lead");
+
+        $("msg").className = "ok";
+        $("msg").textContent = "¡Listo! Lead enviado. Revisa el dashboard.";
+      } catch (e) {
+        $("msg").className = "err";
+        $("msg").textContent = e.message;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: minihub-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  api:
+    build: ./apps/api
+    container_name: minihub-api
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - MONGO_URI=mongodb://mongo:27017/minihub
+      - JWT_SECRET=super-secret-change-me
+      - CORS_ORIGIN=http://localhost:5173
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+
+  dashboard:
+    build: ./apps/dashboard
+    container_name: minihub-dashboard
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=http://localhost:4000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+volumes:
+  mongo_data:
