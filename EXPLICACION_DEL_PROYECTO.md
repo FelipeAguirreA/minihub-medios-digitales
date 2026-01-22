@@ -450,4 +450,3 @@ Devuelve leads al Dashboard
 
 ---
 
-¡Ahora tienes todo el código comentado y una guía completa del proyecto! 🎉
